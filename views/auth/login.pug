@@ -1,0 +1,17 @@
+include ../components/navbar.pug
+.container
+  if messages
+    each message in messages
+      .alert.alert-danger= message
+
+  form.form-horizontal(action='/login', method='POST')
+    .mb-2.mt-2
+      label.form-label(for='username') Username
+      input#username.form-control(type='text', name='username')
+    .mb-3
+      label.form-label(for='password') Password
+      input#password.form-control(type='password', name='password')
+    //- .mb-3.form-check
+    //-   input#remember.form-check-input(type='checkbox')
+    //-   label.form-check-label(for='remember') Remember me
+    button.btn.btn-primary(type='submit', value='Login') Login
