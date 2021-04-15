@@ -1,0 +1,18 @@
+include ../components/navbar.pug
+.container
+  h1 Basket
+  table.table
+    thead
+      tr
+        th(scope='col') #
+        th(scope='col') Book Name
+        th(scope='col') Quantity
+        th(scope='col') Status
+    tbody
+      if orders 
+        each order in orders
+          tr
+            td= order.stt
+            td= order.bookName
+            td= order.quantity 
+            td= order.status

@@ -11,6 +11,7 @@ var cookieSession = require('cookie-session')
 // Import routers
 const authRouter = require('./routes/auth.route')
 const accountRouter = require('./routes/account.route')
+const orderRouter = require("./routes/order.route")
 
 // Import middlewares
 const authMiddleware = require('./middlewares/auth.middleware')
@@ -37,8 +38,10 @@ app.set('view engine', 'pug')
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
+// TODO: Need to authorization
 // Routes
 app.use('/', authRouter)
 app.use('/accounts', authMiddleware.requireAuth, accountRouter)
+app.use('/', authMiddleware.requireAuth,orderRouter)
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
