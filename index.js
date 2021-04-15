@@ -8,6 +8,9 @@ const path = require('path')
 
 // Import routers
 const authRouter = require('./routes/auth.route')
+const bookRouter = require('./routes/book.route')
+const adminRouter = require('./routes/admin.route')
+const bookshellRouter = require('./routes/bookshell.route')
 
 // Environment variables
 const PORT = process.env.PORT
@@ -28,5 +31,8 @@ app.use(express.urlencoded({ extended: true }))
 
 // Routes
 app.use('/', authRouter)
+app.use('/', bookRouter)
+app.use('/', adminRouter)
+app.use('/', bookshellRouter)
 
 app.listen(PORT, () => console.log(`Listening on port ${PORT}`))

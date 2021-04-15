@@ -1,0 +1,19 @@
+include ../components/navbar.pug
+.container
+    if bookseller
+        div
+            each book in bookseller
+                div
+                    form.form-horizontal(action='/booknewcreate', method='POST')
+                        //p
+                        //    -var url = '/book?bookName=' + book.bookName
+                        //    a(href=url) Tên sách: #{book.bookName}
+                        p Tên sách: #{book.bookName}
+                        input(hidden, type='text', name='bookName', value=book.bookName)
+                        p Số lượng: #{book.count}
+                        input(hidden, type='number', name='count', value=book.count)
+                        br
+                        input(type='submit')
+                        br
+                        br
+                        br

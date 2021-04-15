@@ -1,0 +1,10 @@
+include ../components/navbar.pug
+.container
+    form.form-horizontal(action='/post', method='POST')
+        .mb-2.mt-2
+            label.form-label(for='bookName') Tên sách
+            input#bookName.form-control(type='text', name='bookName')
+        .mb-3
+            label.form-label(for='count') Số lượng
+            input#count.form-control(type='number', name='count')
+        input(type='submit', title='Gửi')
