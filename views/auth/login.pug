@@ -5,7 +5,11 @@ include ../components/navbar.pug
       .alert.alert-danger= message
 
   form.form-horizontal(action='/login', method='POST')
+    if fromUrl
+
+      input.form-control(type='text', name='fromUrl', value= fromUrl, hidden=true)
     .mb-2.mt-2
+      
       label.form-label(for='username') Username
       input#username.form-control(type='text', name='username')
     .mb-3
@@ -14,4 +18,8 @@ include ../components/navbar.pug
     //- .mb-3.form-check
     //-   input#remember.form-check-input(type='checkbox')
     //-   label.form-check-label(for='remember') Remember me
-    button.btn.btn-primary(type='submit', value='Login') Login
+    .mb-3
+        button.btn.btn-primary(type='submit', value='Login') Login
+    .mb-3
+        button.btn.btn-primary(type='button', value='Register') 
+            a(href='/register' style='text-decoration:none; color: white;') Register
