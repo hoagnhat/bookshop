@@ -1,0 +1,30 @@
+include ../components/navbar.pug
+.container
+  if messages
+    each message in messages
+      .alert.alert-danger= message
+
+  form.form-horizontal(action='/register', method='POST')
+    .mb-3.mt-2
+      label.form-label(for='username') Username
+      input#username.form-control(type='text', name='username')
+    .mb-3
+      label.form-label(for='password') Password
+      input#password.form-control(type='password', name='password')
+    .mb-3
+      label.form-label(for='name') Name
+      input#name.form-control(type='text', name='name')
+    .mb-3
+      label.form-label(for='phone') Phone
+      input#phone.form-control(type='text', name='phone')
+    .mb-3
+      label.form-label(for='classs') Class
+      input#classs.form-control(type='text', name='classs')
+    //- .mb-3.form-check
+    //-   input#remember.form-check-input(type='checkbox')
+    //-   label.form-check-label(for='remember') Remember me
+    .mb-3
+        button.btn.btn-primary(type='submit', value='Register') Register
+    .mb-3
+        button.btn.btn-primary(type='button', value='Login') 
+            a(href='/login' style='text-decoration:none; color: white;') Already have an account

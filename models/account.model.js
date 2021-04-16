@@ -11,9 +11,18 @@ const accountSchema = new Schema({
         type: String,
         required: true
     },
+    name: {
+        type: String
+    },
+    phone: {
+        type: String
+    },
+    class: {
+        type: String
+    },
     role: {
         type: String,
-        defautl: 'user'
+        default: 'user'
     }
 })
 
