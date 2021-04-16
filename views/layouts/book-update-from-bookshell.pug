@@ -1,0 +1,12 @@
+include ../components/navbar.pug
+.container
+    if bookshell
+        each book in bookshell
+            div
+                form(action='/book-accept', method='POST')
+                    input(name='bookId', value=book.bookId, hidden)
+                    input(name='id', value=book.id, hidden)
+                    p Tên sách: #{book.bookName}
+                    input(name='count', value=book.count, hidden)
+                    p Số lượng: #{book.count}
+                    input(type='submit')

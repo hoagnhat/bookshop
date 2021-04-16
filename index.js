@@ -10,6 +10,8 @@ var cookieSession = require('cookie-session')
 
 // Import routers
 const authRouter = require('./routes/auth.route')
+const bookRouter = require('./routes/book.route')
+const bookshellRouter = require('./routes/bookshell.route')
 const accountRouter = require('./routes/account.route')
 const orderRouter = require("./routes/order.route")
 
@@ -41,6 +43,8 @@ app.use(express.urlencoded({ extended: true }))
 // TODO: Need to authorization
 // Routes
 app.use('/', authRouter)
+app.use('/', bookRouter)
+app.use('/', bookshellRouter)
 app.use('/accounts', authMiddleware.requireAuth, accountRouter)
 app.use('/', authMiddleware.requireAuth, authMiddleware.isUser, orderRouter)
 
