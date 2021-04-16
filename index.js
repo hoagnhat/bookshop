@@ -42,6 +42,6 @@ app.use(express.urlencoded({ extended: true }))
 // Routes
 app.use('/', authRouter)
 app.use('/accounts', authMiddleware.requireAuth, accountRouter)
-app.use('/', authMiddleware.requireAuth,orderRouter)
+app.use('/', authMiddleware.requireAuth, authMiddleware.isUser, orderRouter)
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
