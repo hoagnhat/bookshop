@@ -7,25 +7,63 @@ module.exports.getStatis = async (req, res) => {
         const result = new Map()
         const orders = await Order.find({status : 'pending' || 'finish'})
 
+        console.log(orders)
+
         const array = await statis(result, orders)
 
+        // console.log(orders)
 
         res.render('layouts/statis-page', { array })
     } else {
         if (req.query.type === 'day') {
-            const day = Date.parse(req.query.value);
+            const day = new Date(req.query.value);
 
             const result = new Map()
             const orders = await Order.find({date : day})
 
-            const array = statis(result, orders)
+            console.log(orders)
+
+            const array = await statis(result, orders)
 
             res.render('layouts/statis-page', { array })
 
         } else if (req.query.type === 'month') {
+            const result = new Map()
+            const orders = await Order.find({})
 
+            const year = req.query.value.substring(0,4)
+            let month = req.query.value[5]=='0' ? req.query.value[6] : req.query.value.substring(5,7)
+            month = parseInt(month) - 1
+            month = month.toString()
+
+
+            const list = []
+            for (let i = 0; i < orders.length; i++) {
+
+                if (orders[i].date.getMonth() == month && orders[i].date.getFullYear() == year) {
+                    list.push(orders[i]);
+                }
+            }
+
+
+            const array = await statis(result, list);
+            res.render('layouts/statis-page', {array})
         } else if (req.query.type === 'year') {
 
+            const result = new Map()
+            const orders = await Order.find({})
+
+            const list = []
+            for (let i = 0; i < orders.length; i++) {
+
+                if (orders[i].date.getFullYear() == req.query.value) {
+                    list.push(orders[i]);
+                }
+            }
+
+
+            const array = await statis(result, list);
+            res.render('layouts/statis-page', {array})
         }
 
     }
@@ -60,3 +98,4 @@ const statis = async function (result, orders) {
     const array = Array.from(result)
     return array;
 }
+
