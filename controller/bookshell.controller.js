@@ -3,15 +3,17 @@ const Book = require("../models/book.model")
 
 // lấy sách cần thua mua
 module.exports.getBookshell = async (req, res) => {
-    const book = await Book.findById(req.query.id)
-    res.render('layouts/book-shell', {book})
+    // const book = await Book.findById(req.query.id)
+    const books = await Book.find({});
+    res.render('layouts/book-shell', {books})
 }
 
 // gửi đơn yêu cầu admin mua
 module.exports.postBookshell = async (req, res) => {
+    const book = await Book.findById(req.body.bookId);
     const bookshell = new Bookshell();
     bookshell.bookId = req.body.bookId;
-    bookshell.bookName = req.body.bookName;
+    bookshell.bookName = book.bookName;
     bookshell.count = req.body.count;
     bookshell.status = false;
     await bookshell.save();

@@ -1,10 +1,14 @@
 include ../components/navbar.pug
 .container
     form.form-horizontal(action='/book-sell-by-user', method='POST')
-        input(hidden, type='text', name='bookId', value=book.id)
-        input(hidden, type='text', name='bookName', value=book.bookName)
-        p Tên sách: #{book.bookName}
-        .mb-3
-            label.form-label(for='count') Số lượng
-            input#count.form-control(type='number', name='count')
-        input(type='submit', title='Gửi')
+        if books
+            select#book(name='bookId')
+                each book in books
+                    option(value=book.id) #{book.bookName}
+            .mb-3
+                label.form-label(for='count') Số lượng
+                input#count.form-control(type='number', name='count')
+            input(type='submit', title='Gửi')
+
+
+

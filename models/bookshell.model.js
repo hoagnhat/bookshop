@@ -20,4 +20,4 @@ const booksellerSchema = new Schema({
     }
 })
 
-module.exports = mongoose.model('Bookshell', booksellerSchema, 'bookshell')
+module.exports = mongoose.model('Booksell', booksellerSchema, 'booksell')
