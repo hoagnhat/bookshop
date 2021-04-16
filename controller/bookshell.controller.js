@@ -12,6 +12,9 @@ module.exports.getBookshell = async (req, res) => {
 module.exports.postBookshell = async (req, res) => {
     const book = await Book.findById(req.body.bookId);
     const bookshell = new Bookshell();
+
+    //TODO Dummy userID here
+    bookshell.userId = '6076b1e6acc4191ea638dcf5'
     bookshell.bookId = req.body.bookId;
     bookshell.bookName = book.bookName;
     bookshell.count = req.body.count;

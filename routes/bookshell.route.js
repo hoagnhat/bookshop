@@ -4,7 +4,7 @@ const router = express.Router()
 const controller = require('../controller/bookshell.controller')
 
 
-//Get trahg mua sách, phải có param nhá
+// User bán sách cho admin
 router.get('/book-sell-by-user', controller.getBookshell)
 
 //thực hiện tạo bookshell

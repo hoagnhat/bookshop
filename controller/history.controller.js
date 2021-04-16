@@ -11,9 +11,10 @@ module.exports.getOrderHistory = async (req, res) => {
 
 module.exports.getSoldHistory = async (req, res) => {
     //TODO Dummy id user to get history orther
-    const userID = '6078341bb36a282660cb09b8'
-    const booksold = await Bookshell.find({userID : userID})
-    res.render('layouts/user-history-buy', {booksold})
+    const userId = '6076b1e6acc4191ea638dcf5'
+    const booksold = await Bookshell.find({userId : userId})
+    console.log(booksold)
+    res.render('layouts/user-history-sold',  { booksold })
 }
 
 module.exports.getOrderHistoryDetails = async (req, res) => {
@@ -47,6 +48,7 @@ module.exports.getSoldHistoryDetails = async (req, res) => {
         res.redirect('/history-sold')
     } else {
         const booksold = await Bookshell.findById(req.query.id)
+
         res.render('layouts/user-history-sold-detail', {booksold})
     }
 }
