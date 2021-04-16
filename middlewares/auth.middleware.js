@@ -10,3 +10,23 @@ module.exports.requireAuth = async (req, res, next) => {
         next()
     }
 }
+
+module.exports.isUser = async (req, res, next) => {
+    const { role } = req.body
+    if (role == 'user' || role == 'admin') {
+        next()
+    } else {
+        res.render('auth/cannotAccess')
+        return
+    }
+}
+
+module.exports.isAdmin = async (req, res, next) => {
+    const { role } = req.body
+    if (role == 'admin') {
+        next()
+    } else {
+        res.render('auth/cannotAccess')
+        return
+    }
+}

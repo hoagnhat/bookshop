@@ -15,6 +15,10 @@ const orderSchema = new Schema({
     date: {
       type: Date
     },
+    total: {
+        type: Number,
+        default: 0
+    },
     status: {
         type: String,
         default: 'pending'

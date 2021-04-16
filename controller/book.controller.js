@@ -47,3 +47,17 @@ const render = function (res, books) {
         res.render('layouts/book-from-db', {books})
     }
 }
+
+module.exports.findAll = async (req, res) => {
+    const page = parseInt(req.query.page) || 1
+    const perPage = 8
+    const start = (page - 1) * perPage
+    const end = page * perPage
+    const books = await Book.find()
+    const pageNumber = (page / perPage) + 1
+    const pages = []
+    for (let i = 0; i < pageNumber; i++) {
+        pages[i] = i + 1
+    }
+    res.render('layouts/bookshop', { books: books.slice(start, end), pages: pages })
+}

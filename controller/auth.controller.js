@@ -4,6 +4,7 @@ module.exports.GetLogin = async (req, res) => {
     const { username } = req.signedCookies
     if (username) {
         const account = await Account.findOne({ username })
+        res.cookie('username', username, { signed: true, maxAge: 3 * 60 * 60 * 1000 }) // 3 hours
         req.body = { username: account.username, role: account.role }
         res.render('layouts/hello')
         return

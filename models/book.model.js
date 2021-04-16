@@ -7,7 +7,8 @@ const bookSchema = new Schema({
         required : true
     },
     price : {
-        type: Number
+        type: Number,
+        default: 0
     },
     image : {
         type: String
