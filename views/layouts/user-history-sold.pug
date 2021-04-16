@@ -1,0 +1,10 @@
+include ../components/navbar.pug
+.container
+    if orders
+        div
+            each sell in booksold
+                div
+                    p Mã gia dịch: #{sell.id}
+                    p
+                        -const url = '/history-sold-detail?id=' + sell.id
+                        a(href=url) Bấm vào để xem thông tin chi tiết

@@ -1,0 +1,10 @@
+include ../components/navbar.pug
+.container
+    if orders
+        div
+            each order in orders
+                div
+                    p Mã đơn hàng: #{order.id}
+                    p
+                        -const url = '/history-buy-detail?id=' + order.id
+                        a(href=url) Bấm vào để xem thông tin chi tiết

@@ -1,0 +1,21 @@
+include ../components/navbar.pug
+.container
+    table
+        thead
+            tr
+                th(style='width:200px') Tên sách
+                th(style='width:200px') Số lượng
+                th(style='width:200px') Thành tiền
+        if data.array
+        tbody
+            -let total = 0
+            each item in data.array
+                tr
+                    td Tên sách: #{item.name}
+                    td Số lượng: #{item.count}
+                    td Đơn giá: #{item.price}
+                    -const sum = parseInt(item.price) * parseInt(item.count)
+                    -total += sum
+                    td Thành tiền #{sum}
+    div Tổng: #{total}
+    div Trạng thái: #{data.status}

@@ -6,6 +6,9 @@ const booksellerSchema = new Schema({
         type : String,
         required : true
     },
+    userId:{
+        type: String
+    },
     bookName: {
         type : String,
         required : true

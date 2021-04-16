@@ -15,6 +15,7 @@ const bookshellRouter = require('./routes/bookshell.route')
 const accountRouter = require('./routes/account.route')
 const orderRouter = require("./routes/order.route")
 const statisRouter = require("./routes/statis.route")
+const historyRouter = require("./routes/history.route")
 
 // Import middlewares
 const authMiddleware = require('./middlewares/auth.middleware')
@@ -47,6 +48,7 @@ app.use('/', authRouter)
 app.use('/', bookRouter)
 app.use('/', bookshellRouter)
 app.use('/', statisRouter)
+app.use('/', historyRouter);
 app.use('/accounts', authMiddleware.requireAuth, accountRouter)
 app.use('/', authMiddleware.requireAuth,orderRouter)
 
