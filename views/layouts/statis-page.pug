@@ -1,0 +1,34 @@
+include ../components/navbar.pug
+.container
+    form()
+        span Lọc theo
+        select#type(name='type')
+            option(value='day') Ngày
+            option(value='month') Tháng
+            option(value='year') Năm
+
+        span(style='width:200px') (Ngày yy-mm-dd, tháng: yy-mm, năm: yy)
+        .mb-3
+            input#value.form-control(type='text', name='value')
+        input(type='submit')
+
+    table
+        thead
+            tr
+                th(style='width:200px') Tên sách
+                th(style='width:200px') Số lượng
+                th(style='width:200px') Tổng tiền
+
+        if array
+        tbody
+            each element in array
+                tr
+                    td(style='width:200px') #{element[1].name}
+                    td(style='width:200px') #{element[1].total}
+                    td(style='width:200px') #{element[1].totalPrice}
+
+
+
+        //if result
+
+

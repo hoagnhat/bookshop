@@ -14,6 +14,7 @@ const bookRouter = require('./routes/book.route')
 const bookshellRouter = require('./routes/bookshell.route')
 const accountRouter = require('./routes/account.route')
 const orderRouter = require("./routes/order.route")
+const statisRouter = require("./routes/statis.route")
 
 // Import middlewares
 const authMiddleware = require('./middlewares/auth.middleware')
@@ -45,7 +46,9 @@ app.use(express.urlencoded({ extended: true }))
 app.use('/', authRouter)
 app.use('/', bookRouter)
 app.use('/', bookshellRouter)
+app.use('/', statisRouter)
 app.use('/accounts', authMiddleware.requireAuth, accountRouter)
 app.use('/', authMiddleware.requireAuth,orderRouter)
+
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))
