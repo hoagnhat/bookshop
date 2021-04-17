@@ -1,19 +1,18 @@
 const Order = require('../models/order.model')
 const Account = require('../models/account.model')
 const Book = require('../models/book.model')
-const ObjectId = require('mongo').ObjectId
 
 module.exports.insertIntoBasket = async (req, res) => {
     const id = req.params.id
-    const { username } = req.body 
+    const { username } = req.user 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
     const order = await Order.findOne({ userID: account.id })
     if (!order) {
         const bookArr = [id];
-        
         const countArr = [1];
-        const newOrder = new Order({ userID: account.id, bookID: bookArr, count: countArr, total: book.price, status: 'in basket' })
+        // TODO: need to add date
+        const newOrder = new Order({ userID: account.id, bookID: bookArr, count: countArr, total: book.price, status: 'in basket', date : date() })
         await newOrder.save()
         res.redirect('/cart')
     } else {
@@ -29,6 +28,8 @@ module.exports.insertIntoBasket = async (req, res) => {
             order.total = order.total + book.price
         }
         order.status = 'in basket'
+        order.date = date()
+        // TODO: need add date
         await Order.updateOne({ userID: account.id }, order)
         res.redirect('/cart')
     }
@@ -36,7 +37,7 @@ module.exports.insertIntoBasket = async (req, res) => {
 
 module.exports.removeItem = async (req, res) => {
     const id = req.params.id
-    const { username } = req.body
+    const { username } = req.user
 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
@@ -58,7 +59,7 @@ module.exports.removeItem = async (req, res) => {
 
 module.exports.deleteItem = async (req, res) => {
     const id = req.params.id
-    const { username } = req.body
+    const { username } = req.user
 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
@@ -78,7 +79,7 @@ module.exports.deleteItem = async (req, res) => {
 }
 
 module.exports.showBasket = async (req, res) => {
-    const { username } = req.body
+    const { username } = req.user
     const account = await Account.findOne({ username })
     const orders = []
 
@@ -104,7 +105,7 @@ module.exports.showBasket = async (req, res) => {
 }
 
 module.exports.cancelOrder = async (req, res) => {
-    const { username } = req.body
+    const { username } = req.user
     const account = await Account.findOne({ username })
     const order = await Order.findOne({ userID: account.id })
     order.bookID = []
@@ -116,12 +117,12 @@ module.exports.cancelOrder = async (req, res) => {
 }
 
 module.exports.payOrder = async (req, res) => {
-    const { username } = req.body
+    const { username } = req.user
     const account = await Account.findOne({ username })
     const order = await Order.findOne({ userID: account.id })
     order.status = 'pending'
     await Order.updateOne({ userID: account.id }, order)
-    res.redirect('/cart')
+    res.redirect('/books')
 }
 
 module.exports.showOrderManage = async (req, res) => {
@@ -161,4 +162,15 @@ module.exports.rejectOrder = async (req, res) => {
     order.status = 'reject'
     await Order.updateOne({ _id: order._id }, order)
     res.redirect('/order-manage')
+}
+
+const date = function () {
+    let year = new Date().getFullYear()
+    let abc = (new Date().getMonth() + 1).toString()
+    let month =  abc.length == 1 ? '0' + abc : abc
+    let day = new Date().getDate()
+
+    let date = year + '-'+ month + '-' + day
+
+    return date
 }

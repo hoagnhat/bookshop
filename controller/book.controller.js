@@ -3,11 +3,8 @@ const Order = require('../models/order.model')
 
 //Admin thêm sách mới vào giỏ shop
 module.exports.postNewBook = async (req, res) => {
-    const book = new Book();
-    book.bookName = req.body.bookName
-    book.count = req.body.count
-    book.price = req.body.price
-    book.image = req.body.image
+    const { bookName, price, image, count } = req.body
+    const book = new Book({ bookName, price, image, count });
     await book.save()
 
     //TODO Redirect dummy
@@ -60,4 +57,26 @@ module.exports.findAll = async (req, res) => {
         pages[i] = i + 1
     }
     res.render('layouts/bookshop', { books: books.slice(start, end), pages: pages })
+}
+
+module.exports.getBooksForEdit = async (req, res) => {
+    const books = await Book.find({})
+    res.render('layouts/book-manager', {books})
+    return
+}
+
+module.exports.getBooksDetailsForEdit = async (req, res) => {
+    if (req.query.id == undefined) {
+        res.redirect('/book-manager')
+    } else {
+        const book = await Book.findById(req.query.id)
+        res.render('layouts/book-manager-details', {book})
+        return
+    }
+}
+
+module.exports.postUpdateBook = async (req, res) => {
+    await Book.findByIdAndUpdate(req.body.id, { bookName : req.body.bookName, price : req.body.price, image : req.body.image})
+    res.redirect('/book-manager')
+    return
 }

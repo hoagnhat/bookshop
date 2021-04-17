@@ -2,6 +2,7 @@ const express = require('express')
 const router = express.Router()
 
 const controller = require('../controller/order.controller')
+const authMiddleware = require('../middlewares/auth.middleware')
 
 // GET requests
 router.get('/add/:id', controller.insertIntoBasket)
@@ -12,9 +13,8 @@ router.get('/cancel', controller.cancelOrder)
 router.get('/pay', controller.payOrder)
 
 // GET requests ( just for admin )
-// TODO: Need to authorization
-router.get('/order-manage', controller.showOrderManage)
-router.get('/accept-order/:id', controller.acceptOrder)
-router.get('/reject-order/:id', controller.rejectOrder)
+router.get('/order-manage', authMiddleware.isAdmin, controller.showOrderManage)
+router.get('/accept-order/:id', authMiddleware.isAdmin, controller.acceptOrder)
+router.get('/reject-order/:id', authMiddleware.isAdmin, controller.rejectOrder)
 
 module.exports = router

@@ -5,7 +5,7 @@ module.exports.getStatis = async (req, res) => {
     if (req.query.type === undefined && req.query.value === undefined) {
 
         const result = new Map()
-        const orders = await Order.find({status : 'pending' || 'finish'})
+        const orders = await Order.find({status : 'accept'})
 
         console.log(orders)
 

@@ -3,17 +3,18 @@ const router = express.Router()
 
 const controller = require('../controller/bookshell.controller')
 
+const authMiddleware = require('../middlewares/auth.middleware')
 
-// User bán sách cho admin
+// GET requests just for admin
+router.get('/book-accept', authMiddleware.isAdmin, controller.getIncreaseBookBD)
+
+// POST requests just for admin
+router.post('/book-accept', authMiddleware.isAdmin, controller.postIncreaseBookBD)
+
+// GET requests
 router.get('/book-sell-by-user', controller.getBookshell)
 
-//thực hiện tạo bookshell
+// POST requests
 router.post('/book-sell-by-user', controller.postBookshell)
-
-//Load trang Admin chấp nhận
-router.get('/book-accept', controller.getIncreaseBookBD)
-
-//Admin chấp nhận, tăng
-router.post('/book-accept', controller.postIncreaseBookBD)
 
 module.exports = router

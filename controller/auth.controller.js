@@ -5,8 +5,8 @@ module.exports.GetLogin = async (req, res) => {
     if (username) {
         const account = await Account.findOne({ username })
         res.cookie('username', username, { signed: true, maxAge: 3 * 60 * 60 * 1000 }) // 3 hours
-        req.body = { username: account.username, role: account.role }
-        res.render('layouts/hello')
+        req.user = { username: account.username, role: account.role }
+        res.redirect('/index')
         return
     }
     res.render('auth/login')
@@ -44,13 +44,18 @@ module.exports.PostLogin = async (req, res) => {
         return
     } else {
         res.cookie('username', username, { signed: true, maxAge: 3 * 60 * 60 * 1000 }) // 3 hours 
-        req.body = { username: username, role: account.role }
-        
+        req.user = { username: username, role: account.role }
+
+
+        if (account.role == 'admin') {
+            res.redirect('/admin')
+            return
+        }
         
         if (fromUrl) {
             res.redirect(fromUrl)
         } else {
-            res.render('layouts/hello')
+            res.redirect('/index')
             return
         }
     }
@@ -92,7 +97,7 @@ module.exports.PostRegister = async (req, res) => {
         newAcc.save()
         res.cookie('username', username, { signed: true, maxAge: 3 * 60 * 60 * 1000 }) // 3 hours
         req.body = { username: username, role: newAcc.role }
-        res.render('layouts/hello')
+        res.redirect('/index')
         return
     }
 }

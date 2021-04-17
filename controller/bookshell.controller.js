@@ -1,5 +1,6 @@
 const Bookshell = require("../models/bookshell.model")
 const Book = require("../models/book.model")
+const Account = require('../models/account.model')
 
 // lấy sách cần thua mua
 module.exports.getBookshell = async (req, res) => {
@@ -14,7 +15,10 @@ module.exports.postBookshell = async (req, res) => {
     const bookshell = new Bookshell();
 
     //TODO Dummy userID here
-    bookshell.userId = '6076b1e6acc4191ea638dcf5'
+    const { username } = req.user
+    const account = await Account.findOne({ username })
+    const userID = account.id
+    bookshell.userId = userID
     bookshell.bookId = req.body.bookId;
     bookshell.bookName = book.bookName;
     bookshell.count = req.body.count;
@@ -23,6 +27,7 @@ module.exports.postBookshell = async (req, res) => {
 
     //TODO Dummy render to test
     res.redirect('/books')
+    return
 }
 
 //load vào trang sách phê duyệt để tăng số lượng trong db

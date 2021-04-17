@@ -1,20 +1,26 @@
 const Order = require('../models/order.model')
 const Bookshell = require("../models/bookshell.model")
 const Book = require("../models/book.model")
+const Account = require('../models/account.model')
 
 module.exports.getOrderHistory = async (req, res) => {
-    //TODO Dummy id user to get history orther
-    const userID = '6076b1e6acc4191ea638dcf5'
+    //TODO Dummy id user to get history
+    const { username } = req.user
+    const account = await Account.findOne({ username })
+    const userID = account.id
     const orders = await Order.find({userID : userID})
     res.render('layouts/user-history-buy', {orders})
+    return
 }
 
 module.exports.getSoldHistory = async (req, res) => {
     //TODO Dummy id user to get history orther
-    const userId = '6076b1e6acc4191ea638dcf5'
-    const booksold = await Bookshell.find({userId : userId})
-    console.log(booksold)
+    const { username } = req.user
+    const account = await Account.findOne({ username })
+    const userID = account.id
+    const booksold = await Bookshell.find({userId : userID})
     res.render('layouts/user-history-sold',  { booksold })
+    return
 }
 
 module.exports.getOrderHistoryDetails = async (req, res) => {
@@ -37,9 +43,8 @@ module.exports.getOrderHistoryDetails = async (req, res) => {
         }
 
 
-        console.log({ array : result, status: order.status })
-
         res.render('layouts/user-history-buy-detail', { data : { array : result, status: order.status } })
+        return
     }
 }
 
@@ -50,5 +55,6 @@ module.exports.getSoldHistoryDetails = async (req, res) => {
         const booksold = await Bookshell.findById(req.query.id)
 
         res.render('layouts/user-history-sold-detail', {booksold})
+        return
     }
 }
