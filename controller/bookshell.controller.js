@@ -26,7 +26,7 @@ module.exports.postBookshell = async (req, res) => {
     await bookshell.save();
 
     //TODO Dummy render to test
-    res.redirect('/books')
+    res.redirect('/index')
     return
 }
 
@@ -53,5 +53,5 @@ module.exports.postIncreaseBookBD = async (req, res) => {
 
 
     //TODO redirect dummy here
-    res.redirect('/books')
+    res.redirect('/admin')
 }
