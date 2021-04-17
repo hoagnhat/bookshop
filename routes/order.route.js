@@ -9,8 +9,9 @@ router.get('/add/:id', authMiddleware.requireAuth, authMiddleware.justUser, cont
 router.get('/cart', authMiddleware.requireAuth, authMiddleware.justUser, controller.showBasket)
 router.get('/remove/:id', authMiddleware.requireAuth, authMiddleware.justUser, controller.removeItem)
 router.get('/delete/:id', authMiddleware.requireAuth, authMiddleware.justUser, controller.deleteItem)
-router.get('/cancel', authMiddleware.requireAuth, authMiddleware.justUser, controller.cancelOrder)
+router.get('/cancel/:orderID', authMiddleware.requireAuth, authMiddleware.justUser, controller.cancelOrder)
 router.get('/pay', authMiddleware.requireAuth, authMiddleware.justUser, controller.payOrder)
+router.get('/order-pay', authMiddleware.requireAuth, authMiddleware.justUser, controller.showOrderPayed)
 
 // GET requests ( just for admin )
 router.get('/order-manage', authMiddleware.requireAuth, authMiddleware.isAdmin, controller.showOrderManage)

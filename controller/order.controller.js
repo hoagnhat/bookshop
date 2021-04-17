@@ -1,36 +1,37 @@
 const Order = require('../models/order.model')
 const Account = require('../models/account.model')
 const Book = require('../models/book.model')
+const Basket = require('../models/basket.model')
 
 module.exports.insertIntoBasket = async (req, res) => {
     const id = req.params.id
     const { username } = req.user 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
-    const order = await Order.findOne({ userID: account.id })
-    if (!order) {
+    const basket = await Basket.findOne({ userID: account.id })
+    if (!basket) {
         const bookArr = [id];
         const countArr = [1];
         // TODO: need to add date
-        const newOrder = new Order({ userID: account.id, bookID: bookArr, count: countArr, total: book.price, status: 'in basket', date : date() })
-        await newOrder.save()
+        const newBasket = new Basket({ userID: account.id, bookID: bookArr, count: countArr, total: book.price, status: 'in basket', date : date() })
+        await newBasket.save()
         res.redirect('/cart')
     } else {
-        const index = order.bookID.indexOf(id)
+        const index = basket.bookID.indexOf(id)
         if (index == -1) {
-            order.bookID.push(id)
-            order.count.push(1)
-            order.total = order.total + book.price
+            basket.bookID.push(id)
+            basket.count.push(1)
+            basket.total = basket.total + book.price
         } else {
-            let idx = order.bookID.indexOf(id)
-            let itemCount = order.count[order.bookID.indexOf(id)]
-            order.count[idx] = itemCount + 1
-            order.total = order.total + book.price
+            let idx = basket.bookID.indexOf(id)
+            let itemCount = basket.count[basket.bookID.indexOf(id)]
+            basket.count[idx] = itemCount + 1
+            basket.total = basket.total + book.price
         }
-        order.status = 'in basket'
-        order.date = date()
+        basket.status = 'in basket'
+        basket.date = date()
         // TODO: need add date
-        await Order.updateOne({ userID: account.id }, order)
+        await Basket.updateOne({ userID: account.id }, basket)
         res.redirect('/cart')
     }
 }
@@ -41,19 +42,19 @@ module.exports.removeItem = async (req, res) => {
 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
-    const order = await Order.findOne({ userID: account.id })
+    const basket = await Basket.findOne({ userID: account.id })
 
-    const idx = order.bookID.indexOf(id)
-    let itemCount = order.count[idx]
+    const idx = basket.bookID.indexOf(id)
+    let itemCount = basket.count[idx]
     if (itemCount <= 1) {
-        order.total = order.total - book.price * order.count[idx]
-        order.bookID.splice(idx, 1)
-        order.count.splice(idx, 1)
+        basket.total = basket.total - book.price * basket.count[idx]
+        basket.bookID.splice(idx, 1)
+        basket.count.splice(idx, 1)
     } else {
-        order.total = order.total - book.price
-        order.count[idx] = itemCount - 1
+        basket.total = basket.total - book.price
+        basket.count[idx] = itemCount - 1
     }
-    await Order.updateOne({ userID: account.id }, order)
+    await Basket.updateOne({ userID: account.id }, basket)
     res.redirect('/cart')
 }
 
@@ -63,66 +64,89 @@ module.exports.deleteItem = async (req, res) => {
 
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
-    const order = await Order.findOne({ userID: account.id })
+    const basket = await Basket.findOne({ userID: account.id })
 
-    const idx = order.bookID.indexOf(id)
-    order.total = order.total - book.price * order.count[idx]
-    order.bookID.splice(idx, 1)
-    order.count.splice(idx, 1)
+    const idx = basket.bookID.indexOf(id)
+    basket.total = basket.total - book.price * basket.count[idx]
+    basket.bookID.splice(idx, 1)
+    basket.count.splice(idx, 1)
 
-    if (order.bookID.length == 0) {
-        order.status = 'empty'
+    if (basket.bookID.length == 0) {
+        basket.status = 'empty'
     }
     
-    await Order.updateOne({ userID: account.id }, order)
+    await Basket.updateOne({ userID: account.id }, basket)
     res.redirect('/cart')
 }
 
 module.exports.showBasket = async (req, res) => {
     const { username } = req.user
     const account = await Account.findOne({ username })
-    const orders = []
+    const baskets = []
 
-    const order = await Order.findOne({ userID: account.id })
+    const basket = await Basket.findOne({ userID: account.id })
 
-    if (!order) {
+    if (!basket) {
         res.render('layouts/basket')
         return
     }
 
-    const bookArr = order.bookID
-    const countArr = order.count
+    const bookArr = basket.bookID
+    const countArr = basket.count
 
     for (let i = 0; i < bookArr.length; i++) {
         const book = await Book.findById(bookArr[i])
         
-        orders.push({ stt: i + 1, bookId: book.id, bookName: book.bookName, quantity: countArr[i], price: book.price  * countArr[i] })
+        baskets.push({ stt: i + 1, bookId: book.id, bookName: book.bookName, quantity: countArr[i], price: book.price  * countArr[i] })
     }
     if (bookArr.length == 0) {
-        order.status = 'empty'
+        basket.status = 'empty'
     }
-    res.render('layouts/basket', { orders, status: order.status, total: order.total })
+    res.render('layouts/basket', { orders: baskets, status: basket.status, total: basket.total, orderID: basket.orderID })
 }
 
 module.exports.cancelOrder = async (req, res) => {
+    const orderID = req.params.orderID
     const { username } = req.user
     const account = await Account.findOne({ username })
-    const order = await Order.findOne({ userID: account.id })
-    order.bookID = []
-    order.count = []
-    order.total = 0
-    order.status = 'in basket'
-    await Order.updateOne({ userID: account.id }, order)
-    res.redirect('/cart')
+    const order = await Order.findById(orderID)
+    await Order.findByIdAndDelete({ _id: order._id })
+    res.redirect('/order-pay')
 }
 
 module.exports.payOrder = async (req, res) => {
     const { username } = req.user
     const account = await Account.findOne({ username })
-    const order = await Order.findOne({ userID: account.id })
-    order.status = 'pending'
-    await Order.updateOne({ userID: account.id }, order)
+    const basket = await Basket.findOne({ userID: account.id })
+
+    const order = new Order({ userID: basket.userID, bookID: basket.bookID, count: basket.count, date: date(), total: basket.total })
+    await order.save()
+
+    basket.status = 'empty'
+    basket.bookID = []
+    basket.count = []
+    basket.total = 0
+    await Basket.updateOne({ userID: account.id }, basket)
     res.redirect('/index')
+}
+
+module.exports.showOrderPayed = async (req, res) => {
+    const { username } = req.user
+    const account = await Account.findOne({ username })
+    const orders = []
+    const list = await Order.find({ userID: account.id })
+
+    for (let i = 0; i < list.length; i++) {
+        const books = []
+        for (let j = 0; j < list[i].bookID.length; j++) {
+            const book = await Book.findById(list[i].bookID[j])
+            books.push(book.bookName)
+        }
+        orders.push({ stt: i + 1, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
+    }
+
+    res.render('layouts/orderpay', { orders })
+    return
 }
 
 module.exports.showOrderManage = async (req, res) => {
@@ -152,6 +176,12 @@ module.exports.acceptOrder = async (req, res) => {
         await Book.updateOne({ _id: book._id }, book)
     }
     order.status = 'accept'
+    const basket = await Basket.findOne({ userID: order.userID })
+    basket.bookID = []
+    basket.count = []
+    basket.status = 'empty'
+    basket.total = 0
+    await Basket.updateOne({ _id: basket._id }, basket)
     await Order.updateOne({ _id: order._id }, order)
     res.redirect('/order-manage')
 }
@@ -161,6 +191,9 @@ module.exports.rejectOrder = async (req, res) => {
     const order = await Order.findById(id)
     order.status = 'reject'
     await Order.updateOne({ _id: order._id }, order)
+    const basket = await Basket.findOne({ userID: order.userID })
+    basket.status = 'reject'
+    await Basket.updateOne({ _id: basket._id }, basket)
     res.redirect('/order-manage')
 }
 
