@@ -7,7 +7,7 @@ module.exports.getStatis = async (req, res) => {
         const result = new Map()
         const orders = await Order.find({status : 'accept'})
 
-        console.log(orders)
+        //console.log(orders)
 
         const array = await statis(result, orders)
 
@@ -21,7 +21,7 @@ module.exports.getStatis = async (req, res) => {
             const result = new Map()
             const orders = await Order.find({date : day})
 
-            console.log(orders)
+            //console.log(orders)
 
             const array = await statis(result, orders)
 

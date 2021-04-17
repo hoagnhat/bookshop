@@ -8,7 +8,7 @@ module.exports.postNewBook = async (req, res) => {
     await book.save()
 
     //TODO Redirect dummy
-    res.redirect('/books')
+    res.redirect('/book-manager')
 }
 
 //Load trang thêm sách mới
@@ -51,7 +51,10 @@ module.exports.findAll = async (req, res) => {
     const start = (page - 1) * perPage
     const end = page * perPage
     const books = await Book.find()
-    const pageNumber = (page / perPage) + 1
+    let pageNumber = 1;
+    if (books.length > perPage) {
+        pageNumber = (page / perPage) + 1
+    }
     const pages = []
     for (let i = 0; i < pageNumber; i++) {
         pages[i] = i + 1
@@ -79,4 +82,26 @@ module.exports.postUpdateBook = async (req, res) => {
     await Book.findByIdAndUpdate(req.body.id, { bookName : req.body.bookName, price : req.body.price, image : req.body.image})
     res.redirect('/book-manager')
     return
+}
+
+module.exports.getBookById = async (req, res) => {
+    if (req.query.id == undefined) {
+        res.redirect('/index')
+    } else {
+        const book = await Book.findById(req.query.id)
+        const array = []
+        array.push(book)
+        res.render('layouts/bookshop', { books: array })
+        return
+    }
+}
+
+module.exports.getBookByName = async (req, res) => {
+    if (req.query.name == undefined) {
+        res.redirect('/index')
+    } else {
+        const books = await Book.find({bookName : {$regex: req.query.name, '$options' : 'i'}})
+        res.render('layouts/bookshop', { books })
+        return
+    }
 }

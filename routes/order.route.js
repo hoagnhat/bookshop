@@ -5,16 +5,16 @@ const controller = require('../controller/order.controller')
 const authMiddleware = require('../middlewares/auth.middleware')
 
 // GET requests
-router.get('/add/:id', controller.insertIntoBasket)
-router.get('/cart', controller.showBasket)
-router.get('/remove/:id', controller.removeItem)
-router.get('/delete/:id', controller.deleteItem)
-router.get('/cancel', controller.cancelOrder)
-router.get('/pay', controller.payOrder)
+router.get('/add/:id', authMiddleware.requireAuth, authMiddleware.justUser, controller.insertIntoBasket)
+router.get('/cart', authMiddleware.requireAuth, authMiddleware.justUser, controller.showBasket)
+router.get('/remove/:id', authMiddleware.requireAuth, authMiddleware.justUser, controller.removeItem)
+router.get('/delete/:id', authMiddleware.requireAuth, authMiddleware.justUser, controller.deleteItem)
+router.get('/cancel', authMiddleware.requireAuth, authMiddleware.justUser, controller.cancelOrder)
+router.get('/pay', authMiddleware.requireAuth, authMiddleware.justUser, controller.payOrder)
 
 // GET requests ( just for admin )
-router.get('/order-manage', authMiddleware.isAdmin, controller.showOrderManage)
-router.get('/accept-order/:id', authMiddleware.isAdmin, controller.acceptOrder)
-router.get('/reject-order/:id', authMiddleware.isAdmin, controller.rejectOrder)
+router.get('/order-manage', authMiddleware.requireAuth, authMiddleware.isAdmin, controller.showOrderManage)
+router.get('/accept-order/:id', authMiddleware.requireAuth, authMiddleware.isAdmin, controller.acceptOrder)
+router.get('/reject-order/:id', authMiddleware.requireAuth, authMiddleware.isAdmin, controller.rejectOrder)
 
 module.exports = router

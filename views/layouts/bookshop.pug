@@ -5,9 +5,11 @@ include ../components/navbar.pug
       each book in books
         .col-sm-6.col-md-4.col-lg-3.mt-3.mb-3
           .card(style='width: 18rem;')
-            img.card-img-top(src='static/img/breathbecomeair.jpg', alt='...')
+            img.card-img-top(src=`${book.image}`, style=`width: 18rem; height : 18rem` , alt='...')
             .card-body
-              h5.card-title= book.bookName
+              h5
+                -const url = 'searchById?id=' + book.id
+                a(href=url, style='text-decoration: none; text-decoration: none; color: Black').card-title= book.bookName
               p.card-text Price: #{book.price}
               a.btn.btn-primary(href=`/add/${book.id}`) Add to cart
     .position-relative
@@ -16,5 +18,5 @@ include ../components/navbar.pug
           if pages
             each page in pages
               li.page-item
-                a.page-link(href=`/books?page=${page}`)= page
+                a.page-link(href=`/index?page=${page}`)= page
           

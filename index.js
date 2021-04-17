@@ -12,14 +12,12 @@ var cookieSession = require('cookie-session')
 const authRouter = require('./routes/auth.route')
 const bookRouter = require('./routes/book.route')
 const booksellRouter = require('./routes/booksell.route')
-const accountRouter = require('./routes/account.route')
 const orderRouter = require("./routes/order.route")
 const statisRouter = require("./routes/statis.route")
 const historyRouter = require("./routes/history.route")
 const adminRouter = require('./routes/admin.route')
 
 // Import middlewares
-const authMiddleware = require('./middlewares/auth.middleware')
 
 // Session config
 app.use(cookieParser(process.env.SECRET))
@@ -46,12 +44,12 @@ app.use(express.urlencoded({ extended: true }))
 // TODO: Need to authorization
 // Routes
 app.use('/', authRouter)
-app.use('/', authMiddleware.requireAuth, authMiddleware.justUser, orderRouter)
-app.use('/', authMiddleware.requireAuth, statisRouter)
-app.use('/', authMiddleware.requireAuth, authMiddleware.isUser, bookRouter)
-app.use('/', authMiddleware.requireAuth, authMiddleware.justUser, historyRouter);
-app.use('/', authMiddleware.requireAuth, authMiddleware.isUser, booksellRouter)
-app.use('/', authMiddleware.requireAuth, orderRouter)
-app.use('/', authMiddleware.requireAuth, authMiddleware.isAdmin, adminRouter)
+app.use('/', orderRouter)
+app.use('/', statisRouter)
+app.use('/', bookRouter)
+app.use('/', historyRouter);
+app.use('/', booksellRouter)
+app.use('/', orderRouter)
+app.use('/', adminRouter)
 
 app.listen(process.env.PORT, () => console.log(`Listening on port ${process.env.PORT}`))

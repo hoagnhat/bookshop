@@ -11,6 +11,8 @@ router.get('/', bookController.findAll)
 router.get('/index', bookController.findAll)
 router.get('/login', controller.GetLogin)
 router.get('/register', controller.GetRegister)
+router.get('/searchById', bookController.getBookById)
+router.get('/searchByName', bookController.getBookByName)
 
 router.get('/logout', authMiddleware.requireAuth, authMiddleware.isUser, controller.GetLogout)
 

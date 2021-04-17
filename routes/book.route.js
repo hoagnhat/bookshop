@@ -10,12 +10,12 @@ const authMiddleware = require('../middlewares/auth.middleware')
 // POST requests
 
 // GET request just for admin
-router.get('/create-book', authMiddleware.isAdmin, controller.getNewBook)
-router.get('/book-manager', authMiddleware.isAdmin, controller.getBooksForEdit)
-router.get('/book-manager-details', authMiddleware.isAdmin, controller.getBooksDetailsForEdit)
+router.get('/create-book', authMiddleware.requireAuth, authMiddleware.isAdmin, authMiddleware.isAdmin, controller.getNewBook)
+router.get('/book-manager', authMiddleware.requireAuth, authMiddleware.isAdmin, authMiddleware.isAdmin, controller.getBooksForEdit)
+router.get('/book-manager-details', authMiddleware.requireAuth, authMiddleware.isAdmin, authMiddleware.isAdmin, controller.getBooksDetailsForEdit)
 
 // POST requests just for admin
-router.post('/create-book', authMiddleware.isAdmin, controller.postNewBook)
-router.post('/book-manager-details', authMiddleware.isAdmin, controller.postUpdateBook)
+router.post('/create-book', authMiddleware.requireAuth, authMiddleware.isAdmin, authMiddleware.isAdmin, controller.postNewBook)
+router.post('/book-manager-details', authMiddleware.requireAuth, authMiddleware.isAdmin, authMiddleware.isAdmin, controller.postUpdateBook)
 
 module.exports = router

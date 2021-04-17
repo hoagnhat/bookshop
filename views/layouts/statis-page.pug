@@ -12,20 +12,22 @@ include ../components/navbar.pug
             input#value.form-control(type='text', name='value')
         input(type='submit')
 
-    table
-        thead
-            tr
-                th(style='width:200px') Tên sách
-                th(style='width:200px') Số lượng
-                th(style='width:200px') Tổng tiền
 
-        if array
-        tbody
-            each element in array
+    div.table.row.align-middle.table-striped
+        table
+            thead
                 tr
-                    td(style='width:200px') #{element[1].name}
-                    td(style='width:200px') #{element[1].total}
-                    td(style='width:200px') #{element[1].totalPrice}
+                    th.col-sm-3 Tên sách
+                    th.col-sm-3 Số lượng
+                    th.col-sm-3 Tổng tiền
+
+            if array
+            tbody
+                each element in array
+                    tr
+                        td.col-sm-3 #{element[1].name}
+                        td.col-sm-3 #{element[1].total}
+                        td.col-sm-3 #{element[1].totalPrice}
 
 
 

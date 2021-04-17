@@ -122,7 +122,7 @@ module.exports.payOrder = async (req, res) => {
     const order = await Order.findOne({ userID: account.id })
     order.status = 'pending'
     await Order.updateOne({ userID: account.id }, order)
-    res.redirect('/books')
+    res.redirect('/index')
 }
 
 module.exports.showOrderManage = async (req, res) => {
