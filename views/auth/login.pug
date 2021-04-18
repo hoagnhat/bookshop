@@ -1,25 +1,42 @@
 include ../components/navbar.pug
 .container
-  if messages
-    each message in messages
-      .alert.alert-danger= message
 
-  form.form-horizontal(action='/login', method='POST')
-    if fromUrl
+    div.row
+        div.col-sm-4
+        div.col-sm-4
+            h1 Đăng nhập
+        div.col-sm-4
 
-      input.form-control(type='text', name='fromUrl', value=`${fromUrl}`, hidden=true)
-    .mb-2.mt-2
-      
-      label.form-label(for='username') Username
-      input#username.form-control(type='text', name='username')
-    .mb-3
-      label.form-label(for='password') Password
-      input#password.form-control(type='password', name='password')
-    //- .mb-3.form-check
-    //-   input#remember.form-check-input(type='checkbox')
-    //-   label.form-check-label(for='remember') Remember me
-    .mb-3
-        button.btn.btn-primary(type='submit', value='Login') Login
-    .mb-3
-        button.btn.btn-primary(type='button', value='Register') 
-            a(href='/register' style='text-decoration:none; color: white;') Register
+    div.row
+        div.col-sm-4
+        div.col-sm-4
+            if messages
+                each message in messages
+                    .alert.alert-danger= message
+        div.col-sm-4
+
+    div.row
+        div.col-sm-4
+
+        form.form-horizontal.col-sm-4(action='/login', method='POST')
+            if fromUrl
+
+              input.form-control(type='text', name='fromUrl', value=`${fromUrl}`, hidden=true)
+            .mb-2.mt-2
+
+              label.form-label(for='username') Tên đăng nhập
+              input#username.form-control(type='text', name='username')
+            .mb-3
+              label.form-label(for='password') Mật khẩu
+              input#password.form-control(type='password', name='password')
+            //- .mb-3.form-check
+            //-   input#remember.form-check-input(type='checkbox')
+            //-   label.form-check-label(for='remember') Remember me
+
+
+            button.btn.btn-primary(type='submit', value='Login') Đăng nhập
+
+            button.btn.btn-primary(type='button', value='Register', style='float : right')
+                    a(href='/register' style='text-decoration:none; color: white;') Đăng ký
+
+        div.col-sm-4
