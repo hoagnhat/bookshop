@@ -142,12 +142,14 @@ module.exports.showOrderPayed = async (req, res) => {
     const list = await Order.find({ userID: account.id })
 
     for (let i = 0; i < list.length; i++) {
-        const books = []
-        for (let j = 0; j < list[i].bookID.length; j++) {
-            const book = await Book.findById(list[i].bookID[j])
-            books.push(book.bookName)
+        if (list[i].status == 'pending') {
+            const books = []
+            for (let j = 0; j < list[i].bookID.length; j++) {
+                const book = await Book.findById(list[i].bookID[j])
+                books.push(book.bookName)
+            }
+            orders.push({ stt: i + 1, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
         }
-        orders.push({ stt: i + 1, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
     }
 
     res.render('layouts/orderpay', { orders : orders, username : acc })
