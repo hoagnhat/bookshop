@@ -10,7 +10,7 @@ module.exports.postNewBook = async (req, res) => {
     const acc = await Currentuser.getCurrentUser(req, res)
 
     //TODO Redirect dummy
-    res.redirect('/book-manager', { username : acc })
+    res.redirect('/book-manager')
 }
 
 //Load trang thêm sách mới
