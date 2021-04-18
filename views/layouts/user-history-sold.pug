@@ -1,10 +1,23 @@
 include ../components/navbar.pug
 .container
-    if booksold
-        div
-            each sell in booksold
-                div
-                    p Mã gia dịch: #{sell.id}
-                    p
-                        -const url = '/history-sold-detail?id=' + sell.id
-                        a(href=url) Bấm vào để xem thông tin chi tiết
+    div.row
+        div.col-sm-1
+        div.col-sm-10
+            h1 Lịch sử bán
+        div.col-sm-1
+
+    div.table.row
+        div.col-sm-1
+        table.col-sm-10
+            thead
+                tr
+                    th(scope='col') Mã Giao dịch
+                    th(scope='col') Chi tiết
+            if booksold
+                tbody
+                    each sell in booksold
+                        tr
+                            td #{sell.id}
+                            td
+                                -const url = '/history-sold-detail?id=' + sell.id
+                                a(href=url) Xem

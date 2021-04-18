@@ -1,21 +1,38 @@
 include ../components/navbar.pug
 .container
-    table
-        thead
-            tr
-                th(style='width:200px') Tên sách
-                th(style='width:200px') Số lượng
-                th(style='width:200px') Thành tiền
-        if data.array
-        tbody
-            -let total = 0
-            each item in data.array
+
+    div.row
+        div.col-sm-1
+        div.col-sm-10
+            h1 Thông tin chi tiết
+        div.col-sm-1
+
+    div.table.row
+        div.col-sm-1
+
+        table.col-sm-10
+            thead
                 tr
-                    td Tên sách: #{item.name}
-                    td Số lượng: #{item.count}
-                    td Đơn giá: #{item.price}
-                    -const sum = parseInt(item.price) * parseInt(item.count)
-                    -total += sum
-                    td Thành tiền #{sum}
-    div Tổng: #{total}
-    div Trạng thái: #{data.status}
+                    th(scope='col') Tên sách
+                    th(scope='col') Số lượng
+                    th(scope='col') Đơn giá
+                    th(scope='col') Thành tiền
+
+            if data.array
+                tbody
+                    -let total = 0
+                    each item in data.array
+                        tr
+                            td  #{item.name}
+                            td  #{item.count}
+                            td  #{item.price}
+                            -const sum = parseInt(item.price) * parseInt(item.count)
+                            -total += sum
+                            td  #{sum}
+                tfoot
+                    tr
+                        td
+                        td
+                        th Trạng thái: #{data.status}
+                        th Tổng: #{total}
+        div.col-sm-1
