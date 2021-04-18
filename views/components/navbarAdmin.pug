@@ -16,4 +16,12 @@ nav.navbar.navbar-expand-lg.navbar-light.bg-light
                     a.nav-link.active(aria-current='page', href='/book-manager') Quản lý kho sách
                 li.nav-item
                     a.nav-link.active(aria-current='page', href='/create-book') Tạo sách mới
-
+            ul.navbar-nav
+                -if (username != null)
+                    li.nav-item.d-flex
+                      a(href='/logout').nav-link.active
+                          i.fa.fa-sign-out-alt
+                -else
+                  li.nav-item.d-flex
+                    a(href='/login').nav-link.active
+                        i.fa.fa-user

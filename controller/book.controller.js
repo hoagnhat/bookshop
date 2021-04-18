@@ -1,19 +1,22 @@
 const Book = require("../models/book.model")
 const Order = require('../models/order.model')
+const Currentuser = require('../controller/account.check')
 
 //Admin thêm sách mới vào giỏ shop
 module.exports.postNewBook = async (req, res) => {
     const { bookName, price, image, count } = req.body
     const book = new Book({ bookName, price, image, count });
     await book.save()
+    const acc = await Currentuser.getCurrentUser(req, res)
 
     //TODO Redirect dummy
-    res.redirect('/book-manager')
+    res.redirect('/book-manager', { username : acc })
 }
 
 //Load trang thêm sách mới
 module.exports.getNewBook = async (req, res) => {
-    res.render('layouts/book-form-new')
+    const acc = await Currentuser.getCurrentUser(req, res)
+    res.render('layouts/book-form-new', { username : acc })
 }
 
 //Load hết sách trong db ra
@@ -41,11 +44,12 @@ module.exports.getBooks = async(req, res) => {
 
 const render = function (res, books) {
     if (books != null) {
-        res.render('layouts/book-from-db', {books})
+        res.render('layouts/book-from-db', { books : books})
     }
 }
 
 module.exports.findAll = async (req, res) => {
+    const { username } = req.signedCookies
     const page = parseInt(req.query.page) || 1
     const perPage = 8
     const start = (page - 1) * perPage
@@ -59,21 +63,27 @@ module.exports.findAll = async (req, res) => {
     for (let i = 0; i < pageNumber; i++) {
         pages[i] = i + 1
     }
-    res.render('layouts/bookshop', { books: books.slice(start, end), pages: pages })
+    if (username) {
+        res.render('layouts/bookshop', { books: books.slice(start, end), pages: pages , username : username  })
+    } else {
+        res.render('layouts/bookshop', { books: books.slice(start, end), pages: pages })
+    }
 }
 
 module.exports.getBooksForEdit = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const books = await Book.find({})
-    res.render('layouts/book-manager', {books})
+    res.render('layouts/book-manager', { books : books, username : acc})
     return
 }
 
 module.exports.getBooksDetailsForEdit = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.id == undefined) {
         res.redirect('/book-manager')
     } else {
         const book = await Book.findById(req.query.id)
-        res.render('layouts/book-manager-details', {book})
+        res.render('layouts/book-manager-details', { book : book, username : acc })
         return
     }
 }
@@ -85,23 +95,25 @@ module.exports.postUpdateBook = async (req, res) => {
 }
 
 module.exports.getBookById = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.id == undefined) {
         res.redirect('/index')
     } else {
         const book = await Book.findById(req.query.id)
         const array = []
         array.push(book)
-        res.render('layouts/bookshop', { books: array })
+        res.render('layouts/bookshop', { books: array, username : acc  })
         return
     }
 }
 
 module.exports.getBookByName = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.name == undefined) {
         res.redirect('/index')
     } else {
         const books = await Book.find({bookName : {$regex: req.query.name, '$options' : 'i'}})
-        res.render('layouts/bookshop', { books })
+        res.render('layouts/bookshop', { books : books,  username : acc })
         return
     }
 }

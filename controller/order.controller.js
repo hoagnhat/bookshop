@@ -2,6 +2,7 @@ const Order = require('../models/order.model')
 const Account = require('../models/account.model')
 const Book = require('../models/book.model')
 const Basket = require('../models/basket.model')
+const Currentuser = require('../controller/account.check')
 
 module.exports.insertIntoBasket = async (req, res) => {
     const id = req.params.id
@@ -9,6 +10,7 @@ module.exports.insertIntoBasket = async (req, res) => {
     const account = await Account.findOne({ username })
     const book = await Book.findById(id)
     const basket = await Basket.findOne({ userID: account.id })
+
     if (!basket) {
         const bookArr = [id];
         const countArr = [1];
@@ -80,14 +82,16 @@ module.exports.deleteItem = async (req, res) => {
 }
 
 module.exports.showBasket = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const baskets = []
 
+
     const basket = await Basket.findOne({ userID: account.id })
 
     if (!basket) {
-        res.render('layouts/basket')
+        res.render('layouts/basket', { username : acc })
         return
     }
 
@@ -102,7 +106,7 @@ module.exports.showBasket = async (req, res) => {
     if (bookArr.length == 0) {
         basket.status = 'empty'
     }
-    res.render('layouts/basket', { orders: baskets, status: basket.status, total: basket.total, orderID: basket.orderID })
+    res.render('layouts/basket', { orders: baskets, status: basket.status, total: basket.total, orderID: basket.orderID, username : acc })
 }
 
 module.exports.cancelOrder = async (req, res) => {
@@ -131,6 +135,7 @@ module.exports.payOrder = async (req, res) => {
 }
 
 module.exports.showOrderPayed = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const orders = []
@@ -145,11 +150,12 @@ module.exports.showOrderPayed = async (req, res) => {
         orders.push({ stt: i + 1, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
     }
 
-    res.render('layouts/orderpay', { orders })
+    res.render('layouts/orderpay', { orders : orders, username : acc })
     return
 }
 
 module.exports.showOrderManage = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const orders = []
     const listOrders = await Order.find({ status: 'pending' })
     for (let i = 0; i < listOrders.length; i++) {
@@ -162,7 +168,7 @@ module.exports.showOrderManage = async (req, res) => {
         orders.push({ stt: i + 1, orderId: listOrders[i].id, buyer: account.name, bookName: books, quantity: listOrders[i].count, total: listOrders[i].total })
     }
 
-    res.render('layouts/acceptOrder', { orders })
+    res.render('layouts/acceptOrder', { orders : orders, username : acc })
     return
 }
 

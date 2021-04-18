@@ -2,28 +2,32 @@ const Order = require('../models/order.model')
 const Bookshell = require("../models/bookshell.model")
 const Book = require("../models/book.model")
 const Account = require('../models/account.model')
+const Currentuser = require('../controller/account.check')
 
 module.exports.getOrderHistory = async (req, res) => {
     //TODO Dummy id user to get history
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const userID = account.id
     const orders = await Order.find({userID : userID})
-    res.render('layouts/user-history-buy', {orders})
+    res.render('layouts/user-history-buy', { orders : orders, username : acc})
     return
 }
 
 module.exports.getSoldHistory = async (req, res) => {
     //TODO Dummy id user to get history orther
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const userID = account.id
     const booksold = await Bookshell.find({userId : userID})
-    res.render('layouts/user-history-sold',  { booksold })
+    res.render('layouts/user-history-sold',  { booksold : booksold, username : acc })
     return
 }
 
 module.exports.getOrderHistoryDetails = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.id == undefined) {
         res.redirect('/history-buy')
     } else {
@@ -43,18 +47,19 @@ module.exports.getOrderHistoryDetails = async (req, res) => {
         }
 
 
-        res.render('layouts/user-history-buy-detail', { data : { array : result, status: order.status } })
+        res.render('layouts/user-history-buy-detail', { data : { array : result, status: order.status }, username : acc })
         return
     }
 }
 
 module.exports.getSoldHistoryDetails = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.id == undefined) {
         res.redirect('/history-sold')
     } else {
         const booksold = await Bookshell.findById(req.query.id)
 
-        res.render('layouts/user-history-sold-detail', {booksold})
+        res.render('layouts/user-history-sold-detail', { booksold : booksold, username : acc })
         return
     }
 }

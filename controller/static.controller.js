@@ -1,19 +1,14 @@
 const Order = require('../models/order.model')
 const Book = require("../models/book.model")
+const Currentuser = require('../controller/account.check')
 
 module.exports.getStatis = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     if (req.query.type === undefined && req.query.value === undefined) {
-
         const result = new Map()
         const orders = await Order.find({status : 'accept'})
-
-        //console.log(orders)
-
         const array = await statis(result, orders)
-
-        // console.log(orders)
-
-        res.render('layouts/statis-page', { array })
+        res.render('layouts/statis-page', { array : array, username : acc })
     } else {
         if (req.query.type === 'day') {
             const day = new Date(req.query.value);
@@ -25,7 +20,7 @@ module.exports.getStatis = async (req, res) => {
 
             const array = await statis(result, orders)
 
-            res.render('layouts/statis-page', { array })
+            res.render('layouts/statis-page', { array : array, username : acc })
 
         } else if (req.query.type === 'month') {
             const result = new Map()
@@ -47,7 +42,7 @@ module.exports.getStatis = async (req, res) => {
 
 
             const array = await statis(result, list);
-            res.render('layouts/statis-page', {array})
+            res.render('layouts/statis-page', { array : array, username : acc })
         } else if (req.query.type === 'year') {
 
             const result = new Map()
@@ -63,7 +58,7 @@ module.exports.getStatis = async (req, res) => {
 
 
             const array = await statis(result, list);
-            res.render('layouts/statis-page', {array})
+            res.render('layouts/statis-page', { array : array, username : acc })
         }
 
     }

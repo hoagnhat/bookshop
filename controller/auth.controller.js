@@ -1,6 +1,8 @@
 const Account = require('../models/account.model')
+const Currentuser = require('../controller/account.check')
 
 module.exports.GetLogin = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.signedCookies
     if (username) {
         const account = await Account.findOne({ username })
@@ -9,12 +11,13 @@ module.exports.GetLogin = async (req, res) => {
         res.redirect('/index')
         return
     }
-    res.render('auth/login')
+    res.render('auth/login', {username : acc})
     return
 }
 
-module.exports.GetRegister = (req, res) => {
-    res.render('auth/register')
+module.exports.GetRegister = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
+    res.render('auth/register', { username : acc })
     return
 }
 
@@ -25,6 +28,7 @@ module.exports.GetLogout = (req, res) => {
 }
 
 module.exports.PostLogin = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const { username, password, fromUrl } = req.body
     const messages = [];
     const account = await Account.findOne({ username })
@@ -40,7 +44,7 @@ module.exports.PostLogin = async (req, res) => {
     }
 
     if (messages.length > 0) {
-        res.render('auth/login', { messages })
+        res.render('auth/login', { messages : messages, username: acc })
         return
     } else {
         res.cookie('username', username, { signed: true, maxAge: 3 * 60 * 60 * 1000 }) // 3 hours 
@@ -62,6 +66,7 @@ module.exports.PostLogin = async (req, res) => {
 }
 
 module.exports.PostRegister = async (req, res) => {
+    const acc = await Currentuser.getCurrentUser(req, res)
     const data = req.body
     const { username, password, name, phone, classs } = data
     const messages = []
@@ -90,7 +95,7 @@ module.exports.PostRegister = async (req, res) => {
     }
 
     if (messages.length > 0) {
-        res.render('auth/register', { messages })
+        res.render('auth/register', { messages : messages, username: acc })
         return
     } else {
         const newAcc = await new Account(req.body)
