@@ -18,6 +18,7 @@ const historyRouter = require("./routes/history.route")
 const adminRouter = require('./routes/admin.route')
 
 // Import middlewares
+const authMiddleware = require('./middlewares/auth.middleware')
 
 // Session config
 app.use(cookieParser(process.env.SECRET))
@@ -34,15 +35,15 @@ mongoose.connect(process.env.MONGO_URL , {useNewUrlParser: true, useUnifiedTopol
 
 // Config static files & view engine
 app.use('/static', express.static(path.join(__dirname, 'public')))
-app.set('views', path.join(__dirname, 'views'))
+app.set('views', path.join(__dirname, 'views-new'))
 app.set('view engine', 'pug')
 
 // Config general
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
-// TODO: Need to authorization
 // Routes
+app.use(authMiddleware.checkCookies)
 app.use('/', authRouter)
 app.use('/', orderRouter)
 app.use('/', statisRouter)

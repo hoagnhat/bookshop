@@ -1,5 +1,6 @@
-const Currentuser = require('../controller/account.check')
+const Account = require('../models/account.model')
 module.exports.loadAdminPage = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
-    res.render('layouts/admin', { username : acc })
+    const { username } = req.user
+    const acc = await Account.findOne({ username })
+    res.render('layouts/admin', { username : acc.username })
 }

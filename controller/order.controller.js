@@ -111,8 +111,6 @@ module.exports.showBasket = async (req, res) => {
 
 module.exports.cancelOrder = async (req, res) => {
     const orderID = req.params.orderID
-    const { username } = req.user
-    const account = await Account.findOne({ username })
     const order = await Order.findById(orderID)
     await Order.findByIdAndDelete({ _id: order._id })
     res.redirect('/order-pay')
@@ -135,12 +133,11 @@ module.exports.payOrder = async (req, res) => {
 }
 
 module.exports.showOrderPayed = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const orders = []
     const list = await Order.find({ userID: account.id })
-
+    let stt = 0;
     for (let i = 0; i < list.length; i++) {
         if (list[i].status == 'pending') {
             const books = []
@@ -148,16 +145,17 @@ module.exports.showOrderPayed = async (req, res) => {
                 const book = await Book.findById(list[i].bookID[j])
                 books.push(book.bookName)
             }
-            orders.push({ stt: i + 1, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
+            orders.push({ stt: ++stt, orderID: list[i].id, bookName: books, quantity: list[i].count, total: list[i].total })
         }
     }
 
-    res.render('layouts/orderpay', { orders : orders, username : acc })
+    res.render('layouts/orderpay', { orders : orders, username : account.username })
     return
 }
 
 module.exports.showOrderManage = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
+    const { username } = req.user
+    const acc = await Account.findOne({ username })
     const orders = []
     const listOrders = await Order.find({ status: 'pending' })
     for (let i = 0; i < listOrders.length; i++) {
@@ -170,7 +168,7 @@ module.exports.showOrderManage = async (req, res) => {
         orders.push({ stt: i + 1, orderId: listOrders[i].id, buyer: account.name, bookName: books, quantity: listOrders[i].count, total: listOrders[i].total })
     }
 
-    res.render('layouts/acceptOrder', { orders : orders, username : acc })
+    res.render('layouts/acceptOrder', { orders : orders, username : acc.username })
     return
 }
 

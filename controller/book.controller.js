@@ -1,6 +1,7 @@
 const Book = require("../models/book.model")
 const Order = require('../models/order.model')
 const Currentuser = require('../controller/account.check')
+const accountModel = require("../models/account.model")
 
 //Admin thêm sách mới vào giỏ shop
 module.exports.postNewBook = async (req, res) => {
@@ -108,12 +109,23 @@ module.exports.getBookById = async (req, res) => {
 }
 
 module.exports.getBookByName = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
+    const { username } = req.user
+    const acc = await accountModel.findOne({ username })
     if (req.query.name == undefined) {
         res.redirect('/index')
     } else {
         const books = await Book.find({bookName : {$regex: req.query.name, '$options' : 'i'}})
-        res.render('layouts/bookshop', { books : books,  username : acc })
+        res.render('layouts/bookshop', { books : books,  username : acc.username })
         return
     }
+}
+
+module.exports.showMainPage = async (req, res) => {
+    if (!req.user) {
+        res.render('layouts/main')
+        return
+    }
+    const { username } = req.user
+    res.render('layouts/main', { username })
+    return
 }

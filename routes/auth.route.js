@@ -7,7 +7,7 @@ const bookController = require('../controller/book.controller')
 const authMiddleware = require('../middlewares/auth.middleware')
 
 // GET Requests
-router.get('/', bookController.findAll)
+router.get('/', bookController.showMainPage)
 router.get('/index', bookController.findAll)
 router.get('/login', controller.GetLogin)
 router.get('/register', controller.GetRegister)

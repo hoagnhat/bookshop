@@ -11,7 +11,7 @@ module.exports.GetLogin = async (req, res) => {
         res.redirect('/index')
         return
     }
-    res.render('auth/login', {username : acc})
+    res.render('auth/login', {username : acc.username})
     return
 }
 

@@ -6,23 +6,21 @@ const Currentuser = require('../controller/account.check')
 
 module.exports.getOrderHistory = async (req, res) => {
     //TODO Dummy id user to get history
-    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const userID = account.id
     const orders = await Order.find({userID : userID})
-    res.render('layouts/user-history-buy', { orders : orders, username : acc})
+    res.render('layouts/user-history-buy', { orders : orders, username : account.username })
     return
 }
 
 module.exports.getSoldHistory = async (req, res) => {
     //TODO Dummy id user to get history orther
-    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.user
     const account = await Account.findOne({ username })
     const userID = account.id
     const booksold = await Bookshell.find({userId : userID})
-    res.render('layouts/user-history-sold',  { booksold : booksold, username : acc })
+    res.render('layouts/user-history-sold',  { booksold : booksold, username : account.username })
     return
 }
 
