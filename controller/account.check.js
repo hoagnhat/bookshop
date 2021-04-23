@@ -4,6 +4,6 @@ module.exports.getCurrentUser = async (req, res) => {
     if (req.user == undefined) {
         return null
     } else {
-        return ''
+        return req.user.username
     }
 }

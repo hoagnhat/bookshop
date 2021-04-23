@@ -488,7 +488,7 @@ th,td{
     height: 35px;
     color: rgb(247, 38, 38);
 }
-input[type='number'] {
+/* input[type='number'] {
 	margin-right: 7px;
 	line-height: 12px;
     font-size: 15px;
@@ -496,8 +496,7 @@ input[type='number'] {
     width: 30px;
     height: 30px;
     background-color: #fdefe1;
-}
-
+} */
 .btn-mua{
     color: rgba(255, 255, 255, 0.938);
     background: #e84e4e;

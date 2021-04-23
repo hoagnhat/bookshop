@@ -2,6 +2,7 @@ const Book = require("../models/book.model")
 const Order = require('../models/order.model')
 const Currentuser = require('../controller/account.check')
 const accountModel = require("../models/account.model")
+const Account = require('../models/account.model')
 
 //Admin thêm sách mới vào giỏ shop
 module.exports.postNewBook = async (req, res) => {
@@ -16,8 +17,14 @@ module.exports.postNewBook = async (req, res) => {
 
 //Load trang thêm sách mới
 module.exports.getNewBook = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
-    res.render('layouts/book-form-new', { username : acc })
+    if (req.user) {
+        const { username } = req.user
+        const acc = await Account.findOne({ username })
+        res.render('layouts/book-form-new', { username : acc.username })
+        return
+    } else {
+        res.redirect('/login')
+    }
 }
 
 //Load hết sách trong db ra
@@ -96,15 +103,25 @@ module.exports.postUpdateBook = async (req, res) => {
 }
 
 module.exports.getBookById = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
+    let acc = null
+    if (req.user) {
+        const { username } = req.user
+        acc = await Account.findOne({ username })
+    }
+    
     if (req.query.id == undefined) {
         res.redirect('/index')
     } else {
         const book = await Book.findById(req.query.id)
         const array = []
         array.push(book)
-        res.render('layouts/bookshop', { books: array, username : acc  })
-        return
+        if (acc) {
+            res.render('layouts/bookshop', { books: array, username : acc.username })
+            return
+        } else {
+            res.render('layouts/bookshop', { books: array })
+            return
+        }
     }
 }
 

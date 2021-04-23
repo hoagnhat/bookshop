@@ -19,7 +19,8 @@ hr.ngang
               i.far.fa-heart(style='color: #FF8C00;')
               i.fas.fa-compress-arrows-alt(style='color: #FF8C00;')
               i.fas.fa-search-plus(style='color: #FF8C00;')
-          .tieude2(style="font-size: 24px; font-family: Garamond, Baskerville, Caslon, serif;") #{book.bookName}
+          .tieude2(style="font-size: 24px; font-family: Garamond, Baskerville, Caslon, serif;") 
+            a(href=`/searchById?id=${book.id}`, style="text-decoration: none;")= book.bookName
           .duoi
             .trai
               .lop1(style="font-size: 18px; font-family: Josefin Sans;") #{book.price}đ

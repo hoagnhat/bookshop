@@ -2,7 +2,6 @@ const Account = require('../models/account.model')
 const Currentuser = require('../controller/account.check')
 
 module.exports.GetLogin = async (req, res) => {
-    const acc = await Currentuser.getCurrentUser(req, res)
     const { username } = req.signedCookies
     if (username) {
         const account = await Account.findOne({ username })
@@ -10,9 +9,10 @@ module.exports.GetLogin = async (req, res) => {
         req.user = { username: account.username, role: account.role }
         res.redirect('/index')
         return
+    } else {
+        res.render('auth/login')
+        return
     }
-    res.render('auth/login', {username : acc.username})
-    return
 }
 
 module.exports.GetRegister = async (req, res) => {

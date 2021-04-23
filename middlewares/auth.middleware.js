@@ -46,10 +46,6 @@ module.exports.checkCookies = async (req, res, next) => {
     if (username != null) {
         const account = await Account.findOne({ username })
         req.user = { username: account.username, role: account.role}
-        if (account.role == "admin") {
-            res.redirect('/admin')
-            return
-        }
     } else {
         res.clearCookie()
     }
